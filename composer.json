@@ -1,0 +1,19 @@
+{
+    "name": "zhanglidong/laravel-message-send",
+    "description": "message send",
+    "type": "library",
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "Zhanglidong\\LaravelMessageSend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "张立冬",
+            "email": "690191181@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
