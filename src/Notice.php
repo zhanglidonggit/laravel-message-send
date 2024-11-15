@@ -3,6 +3,7 @@
 namespace MessageNotification;
 
 use MessageNotification\Gateways\Gateway;
+use MessageNotification\Message\Message;
 
 class Notice
 {
