@@ -24,7 +24,9 @@ class WechatGateway extends Gateway
                 'Content-Type' => 'application/json',
             ]);
             
-            $message->setAttrbute('agentid', $this->agentid);
+            if(! $message->hasAttribute('agentid') || ($message->hasAttribute('agentid') && !$message->getAttrbute('agentid'))){
+                $message->setAttrbute('agentid', $this->agentid);
+            }
 
             return $this->sendRequestToClient($message);
         } catch (\Exception $ex) {
