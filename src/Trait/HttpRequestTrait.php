@@ -7,9 +7,27 @@ use Psr\Http\Message\ResponseInterface;
 
 trait HttpRequestTrait
 {
-    public function getClient()
+    public function getClient($options = [])
     {
-        return new Client;
+        return new Client($options);
+    }
+
+    public function download($url, $query = [], $headers = [])
+    {
+        try {
+            $response = $this->getClient(['verify' => false])->request('get', $url, [
+                'headers' => $headers,
+                'query' => $query,
+            ]);
+
+            if ((int) $response->getStatusCode() == 200) {
+                return $response->getBody()->getContents();
+            }
+
+            return '';
+        } catch (\Exception $ex) {
+            return '';
+        }
     }
 
     public function get($url, $query = [], $headers = [])
@@ -17,6 +35,14 @@ trait HttpRequestTrait
         return $this->handleResponse($this->getClient()->request('get', $url, [
             'headers' => $headers,
             'query' => $query,
+        ]));
+    }
+
+    protected function postMutipart($endpoint, $params = [], $headers = [])
+    {
+        return $this->handleResponse($this->getClient()->request('post', $endpoint, [
+            'headers' => $headers,
+            'multipart' => $params,
         ]));
     }
 

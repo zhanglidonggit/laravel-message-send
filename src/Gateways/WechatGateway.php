@@ -6,9 +6,9 @@ use MessageNotification\Interface\MessageInterface;
 
 class WechatGateway extends Gateway
 {
-    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url)
+    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url, $other_params = [])
     {
-        parent::__construct($corpid, $corpsecret, $agentid, $token_url, $send_url);
+        parent::__construct($corpid, $corpsecret, $agentid, $token_url, $send_url, $other_params);
         $this->key = 'wechat_access_token_'.$corpid;
     }
 

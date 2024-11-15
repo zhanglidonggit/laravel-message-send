@@ -14,6 +14,11 @@
             "email": "690191181@qq.com"
         }
     ],
+    "extra": {
+        "installer-paths": {
+            "config/notice.php": "Config/notice.php"
+        }
+    },
     "minimum-stability": "dev",
     "require": {}
 }

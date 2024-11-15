@@ -6,9 +6,9 @@ use MessageNotification\Interface\MessageInterface;
 
 class DingdingGateway extends Gateway
 {
-    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url)
+    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url, $other_params = [])
     {
-        parent::__construct($corpid, $corpsecret, $agentid, $token_url, $send_url);
+        parent::__construct($corpid, $corpsecret, $agentid, $token_url, $send_url, $other_params);
         $this->key = 'dingding_access_token_'.$corpid;
     }
 
@@ -42,13 +42,20 @@ class DingdingGateway extends Gateway
 
     public function assertSuccessfully(?array $response, string $check_code = 'errcode', string $msg_code = 'errmsg')
     {
-        if (! isset($response['processQueryKey']) || isset($response['processQueryKey']) && ! $response['processQueryKey']) {
-            throw new \Exception($data['errmsg'] ?? '消息发送失败', $data['errcode'] ?? 1);
+        if (! isset($response[$check_code])) {
+            if (! isset($response['processQueryKey']) || isset($response['processQueryKey']) && ! $response['processQueryKey']) {
+                throw new \Exception($data[$msg_code] ?? '消息发送失败', $data[$msg_code] ?? 1);
+            }
+        } else {
+            if ((int) $response[$check_code] != 0) {
+                throw new \Exception($data[$msg_code] ?? '请求失败', $data[$msg_code] ?? 1);
+            }
         }
 
         return [
             'code' => 0,
             'message' => 'success',
+            'response_data' => $response,
         ];
     }
 

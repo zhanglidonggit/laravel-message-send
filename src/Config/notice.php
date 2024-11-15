@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => 'Dingding',
+    'default' => 'WeChat',
     'channels' => [
         'WeChat' => [
             'corpid' => 'wx0e69a1a43fea50ed',
@@ -9,6 +9,9 @@ return [
             'agentid' => '1000035',
             'token_url' => 'https://qyapi.weixin.qq.com/cgi-bin/gettoken',
             'send_url' => 'https://qyapi.weixin.qq.com/cgi-bin/message/send',
+            'other_params' => [
+                'upload_media_url' => 'https://qyapi.weixin.qq.com/cgi-bin/media/upload',
+            ],
         ],
         'Dingding' => [
             'corpid' => 'dinggxzsyw98ywspyqew',
@@ -16,8 +19,11 @@ return [
             'agentid' => '2659579676',
             'token_url' => 'https://api.dingtalk.com/v1.0/oauth2/accessToken',
             'send_url' => 'https://api.dingtalk.com/v1.0/robot/oToMessages/batchSend',
-            'send_group_url' => 'https://api.dingtalk.com/v1.0/robot/groupMessages/send',
-            'send_application_url' => 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token=',
+            'other_params' => [
+                'upload_media_url' => 'https://oapi.dingtalk.com/media/upload', //钉钉多媒体上传url
+                'send_group_url' => 'https://api.dingtalk.com/v1.0/robot/groupMessages/send',
+                'send_application_url' => 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token=',
+            ],
         ],
         'Feishu' => [
             'corpid' => 'cli_a7b9af88032a100c',
@@ -25,6 +31,10 @@ return [
             'agentid' => '0',
             'token_url' => 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
             'send_url' => 'https://open.feishu.cn/open-apis/message/v4/batch_send/',
+            'other_params' => [
+                'upload_media_url' => 'https://open.feishu.cn/open-apis/im/v1/files',
+                'upload_image_url' => 'https://open.feishu.cn/open-apis/im/v1/images',
+            ],
         ],
     ],
 ];

@@ -21,8 +21,7 @@ class Notice
         }
         $channelGatewayName = '';
         $channelGatewayName = __NAMESPACE__."\\Gateways\\{$channel}Gateway";
-
-        $this->gateway = new $channelGatewayName($config['corpid'], $config['corpsecret'], $config['agentid'], $config['token_url'], $config['send_url']);
+        $this->gateway = new $channelGatewayName($config['corpid'], $config['corpsecret'], $config['agentid'], $config['token_url'], $config['send_url'], $config['other_params'] ?? []);
 
         if (! $this->gateway instanceof $channelGatewayName) {
             throw new \Exception('初始化失败');
@@ -44,5 +43,15 @@ class Notice
     public function send(array|string $message)
     {
         return $this->gateway->send(new Message($message));
+    }
+
+    public function getMediaId(string $url)
+    {
+        return $this->gateway->getMediaId($url);
+    }
+
+    public function getImageId(string $url)
+    {
+        return $this->gateway->getImageId($url);
     }
 }

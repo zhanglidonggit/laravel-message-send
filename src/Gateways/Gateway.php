@@ -3,15 +3,18 @@
 namespace MessageNotification\Gateways;
 
 use MessageNotification\Interface\AccessTokenInterface;
+use MessageNotification\Interface\DownloadOrUploadInterface;
 use MessageNotification\Interface\GatewayInterface;
 use MessageNotification\Interface\MessageInterface;
+use MessageNotification\Trait\HandleFileTrait;
 use MessageNotification\Trait\HttpRequestTrait;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
-abstract class Gateway implements AccessTokenInterface, GatewayInterface
+abstract class Gateway implements AccessTokenInterface, DownloadOrUploadInterface, GatewayInterface
 {
+    use HandleFileTrait;
     use HttpRequestTrait;
     protected string $corpid;
     protected string $corpsecret;
@@ -22,15 +25,32 @@ abstract class Gateway implements AccessTokenInterface, GatewayInterface
     protected int $cacheLifetime = 1500;
     protected string $token_url;
     protected string $send_url;
+    protected string $upload_url;
+    protected string $upload_image_url;
     protected array $headers = [];
     protected mixed $robotCode;
-    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url)
+    protected string $tmp_file_dir = '';
+    public function __construct($corpid, $corpsecret, $agentid, $token_url, $send_url, $other_params = [])
     {
         $this->corpid = $corpid;
         $this->corpsecret = $corpsecret;
         $this->agentid = $agentid;
         $this->token_url = $token_url;
         $this->send_url = $send_url;
+
+        if ($other_params['upload_media_url'] ?? false) {
+            $this->upload_url = $other_params['upload_media_url'];
+        }
+
+        if ($other_params['upload_image_url'] ?? false) {
+            $this->upload_image_url = $other_params['upload_image_url'];
+        }
+
+        if ($other_params['tmp_file_dir'] ?? false) {
+            $this->tmp_file_dir = $other_params['tmp_file_dir'];
+        } else {
+            $this->tmp_file_dir = 'notice_file_tmp';
+        }
 
         if (! $this->cache) { //初始化缓存存储器
             $this->cache = new Psr16Cache(new FilesystemAdapter($this->cacheNameSpace, $this->cacheLifetime));
@@ -85,6 +105,7 @@ abstract class Gateway implements AccessTokenInterface, GatewayInterface
         return [
             'code' => 0,
             'message' => 'success',
+            'response_data' => $response,
         ];
     }
 
@@ -99,5 +120,99 @@ abstract class Gateway implements AccessTokenInterface, GatewayInterface
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+    public function getFileNameExtension($url)
+    {
+        return array_slice(explode('.', $url), -1)[0];
+    }
+
+    public function getUploadUrl($type = '')
+    {
+        return $this->upload_url.'?access_token='.$this->getToken();
+    }
+
+    public function getMediaId(string $path)
+    {
+        [$path,$filename,$extension] = $this->fileSaveCheck($path);
+        $params = [
+            [
+                'name' => 'media',
+                'contents' => fopen($path, 'r'),
+                'filename' => $filename.'.'.$extension,
+            ],
+            [
+                'name' => 'type',
+                'contents' => $this->getFileType($extension),
+            ],
+        ];
+        $response = $this->postMutipart($this->getUploadUrl().'&type='.$this->getFileType($extension), $params, []);
+
+        return $this->assertSuccessfully($response);
+    }
+
+    public function getUrlContent(string $url)
+    {
+        $extension_name = $this->getFileNameExtension($url);
+
+        return [$this->download($url), $extension_name];
+    }
+
+    public function saveFile(string $url)
+    {
+        [$content,$extension] = $this->getUrlContent($url);
+
+        if (! $content) {
+            return '';
+        }
+        $file_path = storage_path().'/app';
+
+        $single_file_name = $file_name = md5(time().$url.random_int(0, 99999));
+        $file_name = $file_path.'/'.$file_name.'.'.$extension;
+        file_put_contents($file_name, $content);
+
+        return [$file_name, $single_file_name]; //返回本地路径
+    }
+
+    public function getFileType(string $extension_name)
+    {
+        $type = 'file';
+
+        switch ($extension_name) {
+            case in_array($extension_name, ['jpg', 'gif', 'png', 'bmp']):
+                $type = 'image';
+
+                break;
+
+            case in_array($extension_name, ['amr', 'mp3', 'wav']):
+                $type = 'voice';
+
+                break;
+
+            case in_array($extension_name, ['mp4']):
+                $type = 'video';
+
+                break;
+        }
+
+        return $type;
+    }
+
+    public function getImageId(string $path)
+    {
+        return [
+            'code' => 0,
+            'message' => 'success',
+            'response' => [],
+        ];
+    }
+
+    public function getUploaImagedUrl()
+    {
+        return '';
+    }
+
+    protected function is_url(string $path)
+    {
+        return filter_var($path, FILTER_VALIDATE_URL) !== false;
     }
 }
