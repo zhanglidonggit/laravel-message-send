@@ -76,7 +76,7 @@ class FeishuGateway extends Gateway
             ],
         ];
         $response = $this->postMutipart($this->getUploadUrl().'&type='.$this->getFileType($extension), $params, $headers);
-
+        @unlink($path);
         return $this->assertSuccessfully($response);
     }
 
@@ -149,7 +149,7 @@ class FeishuGateway extends Gateway
                 ],
             ];
             $response = $this->postMutipart($this->getUploaImagedUrl(), $params, $headers);
-
+            @unlink($path);
             return $this->assertSuccessfully($response);
         } catch (\Exception $ex) {
             return [

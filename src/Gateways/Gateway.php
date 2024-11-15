@@ -147,7 +147,7 @@ abstract class Gateway implements AccessTokenInterface, DownloadOrUploadInterfac
             ],
         ];
         $response = $this->postMutipart($this->getUploadUrl().'&type='.$this->getFileType($extension), $params, []);
-
+        @unlink($path);
         return $this->assertSuccessfully($response);
     }
 
