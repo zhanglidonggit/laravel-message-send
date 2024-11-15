@@ -26,7 +26,7 @@ class NoticeServiceProvider extends ServiceProvider
     {
         // 发布配置文件
         $this->publishes([
-            __DIR__.'/../Config/notice.php' => config_path('config/notice.php'),
+            __DIR__.'/../Config/notice.php' => config_path('notice.php'),
         ], 'notice');
     }
 }
