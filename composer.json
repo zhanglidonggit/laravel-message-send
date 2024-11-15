@@ -8,17 +8,20 @@
             "MessageNotification\\": "src/"
         }
     },
+    "extra": {
+        "installer-paths": {
+            "config/": ["vendor/zhanglidong/laravel-message-send/src/Config/notice.php"]
+        },
+        "files": [
+            "vendor/zhanglidong/laravel-message-send/src/Config/notice.php"
+        ]
+    },
     "authors": [
         {
             "name": "张立冬",
             "email": "690191181@qq.com"
         }
     ],
-    "extra": {
-        "installer-paths": {
-            "config/notice.php": "Config/notice.php"
-        }
-    },
     "minimum-stability": "dev",
     "require": {}
 }
