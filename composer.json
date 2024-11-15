@@ -10,7 +10,7 @@
     },
     "extra": {
         "installer-paths": {
-            "config/": ["vendor/zhanglidong/laravel-message-send/src/Config/notice.php"]
+            "config/notice.php": ["vendor/zhanglidong/laravel-message-send/src/Config/notice.php"]
         },
         "files": [
             "vendor/zhanglidong/laravel-message-send/src/Config/notice.php"
