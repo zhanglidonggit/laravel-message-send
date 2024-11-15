@@ -5,6 +5,8 @@ namespace MessageNotification\Gateways;
 use MessageNotification\Interface\AccessTokenInterface;
 use MessageNotification\Interface\DownloadOrUploadInterface;
 use MessageNotification\Interface\GatewayInterface;
+use MessageNotification\Interface\HttpRequestInterface;
+use MessageNotification\Interface\HttpResponseInterface;
 use MessageNotification\Interface\MessageInterface;
 use MessageNotification\Trait\HandleFileTrait;
 use MessageNotification\Trait\HttpRequestTrait;
@@ -12,7 +14,7 @@ use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
-abstract class Gateway implements AccessTokenInterface, DownloadOrUploadInterface, GatewayInterface
+abstract class Gateway implements AccessTokenInterface, DownloadOrUploadInterface, GatewayInterface,HttpRequestInterface,HttpResponseInterface
 {
     use HandleFileTrait;
     use HttpRequestTrait;

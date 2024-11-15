@@ -3,7 +3,7 @@
 namespace MessageNotification\Gateways;
 
 use MessageNotification\Interface\MessageInterface;
-use MessageNotification\Message;
+use MessageNotification\Message\Message;
 
 class FeishuGateway extends Gateway
 {

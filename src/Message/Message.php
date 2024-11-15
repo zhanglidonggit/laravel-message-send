@@ -1,6 +1,6 @@
 <?php
 
-namespace MessageNotification;
+namespace MessageNotification\Message;
 
 use MessageNotification\Interface\MessageInterface;
 
