@@ -21,4 +21,12 @@ class NoticeServiceProvider extends ServiceProvider
             return new Notice($config);
         });
     }
+
+    public function boot()
+    {
+        // 发布配置文件
+        $this->publishes([
+            __DIR__.'/../Config/notice.php' => config_path('config/notice.php'),
+        ], 'notice');
+    }
 }
