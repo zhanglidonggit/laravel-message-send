@@ -84,7 +84,6 @@ abstract class Gateway implements AccessTokenInterface, DownloadOrUploadInterfac
 
         try {
             $messageBody = $message->toArray();
-            // dd($messageBody);
             $response = $this->postJson($request_url, $messageBody, $header);
 
             return $this->assertSuccessfully($response);

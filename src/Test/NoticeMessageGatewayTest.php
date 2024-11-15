@@ -12,7 +12,6 @@ beforeEach(function () {
     $default_channel = config('notice.default');
     $channels = config('notice.channels');
     $this->config = $channels[$default_channel] ?? [];
-    // dd(storage_path());
 });
 
 //企业微信多媒体上传接口获取mediaId

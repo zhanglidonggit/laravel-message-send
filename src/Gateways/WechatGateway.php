@@ -23,6 +23,8 @@ class WechatGateway extends Gateway
             $this->setHeader([
                 'Content-Type' => 'application/json',
             ]);
+            
+            $message->setAttrbute('agentid', $this->agentid);
 
             return $this->sendRequestToClient($message);
         } catch (\Exception $ex) {
